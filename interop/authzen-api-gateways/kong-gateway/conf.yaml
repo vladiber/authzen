@@ -1,0 +1,77 @@
+_transform: false
+_format_version: '3.0'
+services:
+- host: authzen-todo-backend.demo.aserto.com
+  port: 443
+  name: AuthZEN_Interop
+  retries: 5
+  protocol: https
+  enabled: true
+  connect_timeout: 60000
+  write_timeout: 60000
+  id: 2e9926ca-053f-4a4d-aeea-e45ac77d4775
+  read_timeout: 60000
+routes:
+- regex_priority: 0
+  path_handling: v0
+  preserve_host: false
+  name: Interop
+  methods: ~
+  service: 2e9926ca-053f-4a4d-aeea-e45ac77d4775
+  paths:
+    - ~/users/(?<userId>.+)
+    - ~/todos/(?<todoId>.+)
+    - /users
+    - /todos
+    - /pdps
+  https_redirect_status_code: 426
+  strip_path: false
+  request_buffering: true
+  response_buffering: true
+  protocols:
+  - http
+  - https
+  id: 51799165-1a03-495c-b390-4ac7e7047061
+plugins:
+- tags: ~
+  instance_name: authzen-profile
+  name: authzen
+  id: 96cb9f8d-edd3-4254-b950-2fba72c8289b
+  route: 51799165-1a03-495c-b390-4ac7e7047061
+  config:
+    server:
+      pdp_url: '{     "Aserto":"https://authzen-gateway-proxy.demo.aserto.com",  "Axiomatics": "https://pdp.alfa.guide",   "Cerbos":"https://authzen-proxy-demo.cerbos.dev",     "PlainID":"https://authzeninteropt.se-plainid.com",     "Rock Solid Knowledge": "https://authzen.identityserver.com",     "Topaz": "https://authzen-topaz.demo.aserto.com" }'
+      keys: '{
+         "Indykite": "Basic 8c2e4ab4-6357-41d5-8459-68d961d76c27603bce95-1cec-4ca0-beb4-86ba658b38f26787d594-f760-4dbb-9e04-6ac099e03511",
+         "PingAuthorize": "Bearer Password1",
+         "SGNL": "Bearer eyJkYXRhIjoiQlp5S2FMb1JyS3UrMkpGTzlnM3k0QVZnYUp5d3pld00xQUhwM3ljZ1E2NjNqeXMzbHJYSElBRFRGUzB3elQ3OTRUTm1PS0tUYnU1VGU0M3kyUWN5Z2c9PSIsImlkIjoiZjUyMjgzNjktYzFkMy00YmViLTkyN2ItNmY2ODZlMzA2ZjFjIiwiaW50ZWdyYXRpb25JZCI6IjUxZmY1ZjZmLTgxNjgtNGExNi04Mzk1LTU4YTBmMjA2MjY5OCIsInRlbmFudElkIjoiNmExZGUzNTMtYTA4NS00MjBiLTg4YWYtOWU4ZWYwZTg1NTliIn0=",
+         "Topaz": "Basic 101520"
+         }'
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  enabled: true
+- id: bc8fc574-8540-4dc8-bbcd-cd1b671ab801
+  protocols:
+    - grpc
+    - grpcs
+    - http
+    - https
+  name: cors
+  enabled: true
+  route: 51799165-1a03-495c-b390-4ac7e7047061
+  config:
+    origins:
+      - http://localhost:3000
+      - https://citadel.demo.aserto.com
+      - https://todo.authzen-interop.net
+    credentials: false
+    preflight_continue: false
+    methods:
+      - GET
+      - HEAD
+      - PUT
+      - PATCH
+      - POST
